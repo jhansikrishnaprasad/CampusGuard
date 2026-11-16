@@ -1,0 +1,30 @@
+# Public HTTPS deployment: Caddy (automatic Let's Encrypt certificate) -> CampusGuard. UNTESTED here; follow docs/DEPLOYMENT.md.
+# 1) cp .env.deploy.example .env   2) edit DOMAIN and ADMIN_PASSWORD   3) docker compose up -d --build
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env (at least 12 characters)}
+    volumes:
+      - campusguard_data:/data           # database + videos + evidence + backups + models survive restarts and rebuilds
+    expose: ["8000"]                     # NOT published: only Caddy can reach the app
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/').status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [app]
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env, e.g. campusguard.example.edu}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+volumes:
+  campusguard_data:
+  caddy_data:

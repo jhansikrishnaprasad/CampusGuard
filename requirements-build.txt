@@ -1,0 +1,2 @@
+# Build-time only (Windows executable). Install on top of requirements.txt:  see build_exe.ps1
+pyinstaller==6.11.1

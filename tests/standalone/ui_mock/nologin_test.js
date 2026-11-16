@@ -1,0 +1,11 @@
+const { chromium } = require("playwright"); const assert = require("assert");
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1300, height: 800 } });
+  await p.route("**/cdn.jsdelivr.net/**", r => r.abort());
+  await p.goto("http://127.0.0.1:8765/"); await p.waitForSelector("#view .cg-section", { timeout: 8000 });
+  assert(await p.locator("#login").evaluate(e => e.classList.contains("hidden")), "login screen must stay hidden");
+  assert(await p.locator("#logout").evaluate(e => e.classList.contains("hidden")), "sign-out hidden in local mode");
+  assert(/Dashboard/.test(await p.textContent("#view, body")));
+  assert(!(await p.locator("#quit").evaluate(e => e.classList.contains("hidden"))), "Quit button visible when launcher enabled shutdown");
+  p.on("dialog", d => d.accept());
+  await p.click("#quit"); await p.waitForSelector("text=CampusGuard has stopped", { timeout: 5000 });
+  console.log("NO-LOGIN + QUIT BROWSER TEST PASSED"); await b.close(); })().catch(e => { console.error("FAILED", e.message); process.exit(1); });

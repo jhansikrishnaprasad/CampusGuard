@@ -1,0 +1,50 @@
+# environments / caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.vscode/
+.idea/
+# secrets and local configuration (the example files ARE committed)
+.env
+.env.*
+!.env.example
+!.env.deploy.example
+# runtime data: databases, uploaded videos, evidence, backups, logs
+data/*
+!data/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+# private footage and datasets
+*.mp4
+*.avi
+*.mov
+*.mkv
+datasets/
+# model weights (licences differ - never commit)
+*.pt
+*.pth
+*.onnx
+# build output
+dist/
+build/
+release/
+*.bundle
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local executable builds
+*.exe

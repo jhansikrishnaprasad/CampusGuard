@@ -1,0 +1,6 @@
+# OPTIONAL: install after requirements.txt to enable YOLO person detection / ByteTrack and
+# PyTorch action-recognition models. Large download (~200 MB CPU build).
+# Ultralytics is AGPL-3.0 licensed - read docs/ML_METHODOLOGY.md before distributing.
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.50
